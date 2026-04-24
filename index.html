@@ -3,64 +3,65 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FoodOrder Modern</title>
+<title>FoodOrder Daniel</title>
+
 <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<!-- NAVBAR -->
 <div class="navbar">
-    🍔 FoodOrder
-    <span class="cart-btn" onclick="toggleCart()">🛒 (<span id="cartCount">0</span>)</span>
+  🍔 FoodOrder
+  <button onclick="toggleCart()">🛒</button>
 </div>
 
-<!-- HERO -->
-<div class="hero">
-    <h1>Pesan Makanan Favoritmu</h1>
-    <p>Dibuat oleh Daniel</p>
-</div>
-
-<!-- SEARCH -->
-<input type="text" id="search" placeholder="Cari makanan..." onkeyup="searchMenu()">
-
-<!-- MENU -->
-<div class="menu" id="menu">
+<div class="menu">
 
 <div class="card">
-<img src="https://via.placeholder.com/150">
-<h2>Bakso</h2>
+<img src="https://images.unsplash.com/photo-1604908176997-125f25cc6f3d">
+<h3>Bakso</h3>
 <p>Rp 20000</p>
-<button onclick="addCart('Bakso',20000)">Tambah</button>
+<button onclick="addToCart('Bakso',20000)">Tambah</button>
 </div>
 
 <div class="card">
-<img src="https://via.placeholder.com/150">
-<h2>Mie Ayam</h2>
+<img src="https://images.unsplash.com/photo-1604908554007-5f63b07d4d4f">
+<h3>Mie Ayam</h3>
 <p>Rp 18000</p>
-<button onclick="addCart('Mie Ayam',18000)">Tambah</button>
+<button onclick="addToCart('Mie Ayam',18000)">Tambah</button>
 </div>
 
 <div class="card">
-<img src="https://via.placeholder.com/150">
-<h2>Nasi Goreng</h2>
+<img src="https://images.unsplash.com/photo-1604909052743-9f1f2b8c5c2b">
+<h3>Nasi Goreng</h3>
 <p>Rp 22000</p>
-<button onclick="addCart('Nasi Goreng',22000)">Tambah</button>
+<button onclick="addToCart('Nasi Goreng',22000)">Tambah</button>
 </div>
 
 </div>
 
 <!-- CART -->
-<div class="cart" id="cart">
-<h2>Keranjang</h2>
-<div id="cartItems"></div>
-<p id="total"></p>
-<button onclick="checkout()">Checkout</button>
+<div id="cart" class="cart">
+<div class="cart-header">
+  <h3>Keranjang</h3>
+  <button onclick="toggleCart()">❌</button>
 </div>
 
-<!-- FOOTER -->
-<div class="footer">© Daniel 2025</div>
+<div id="cartItems"></div>
 
+<div class="cart-footer">
+<input type="text" id="alamat" placeholder="Alamat...">
+<h3>Total: Rp <span id="total">0</span></h3>
+<button onclick="checkout()">Pesan</button>
+</div>
+</div>
+
+<div id="toast" class="toast">Berhasil ditambahkan!</div>
+    
+<footer class="footer">
+  Dibuat oleh Daniel © 2025
+</footer>
+    
 <script src="script.js"></script>
 </body>
 </html>
