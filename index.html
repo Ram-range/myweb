@@ -1,38 +1,66 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <title>Pesan Makanan Online</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FoodOrder Modern</title>
+<link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<h1>🍔 Pesan Makanan Online</h1>
-<p>Dibuat oleh: <b>Daniel</b></p>
-
-<div class="menu">
-    <div class="card">
-        <h2>Bakso</h2>
-        <p>Rp 20.000</p>
-        <button onclick="pesan('Bakso')">Pesan</button>
-    </div>
-
-    <div class="card">
-        <h2>Mie Ayam</h2>
-        <p>Rp 18.000</p>
-        <button onclick="pesan('Mie Ayam')">Pesan</button>
-    </div>
-
-    <div class="card">
-        <h2>Nasi Goreng</h2>
-        <p>Rp 22.000</p>
-        <button onclick="pesan('Nasi Goreng')">Pesan</button>
-    </div>
+<!-- NAVBAR -->
+<div class="navbar">
+    🍔 FoodOrder
+    <span class="cart-btn" onclick="toggleCart()">🛒 (<span id="cartCount">0</span>)</span>
 </div>
 
-<p id="hasil"></p>
+<!-- HERO -->
+<div class="hero">
+    <h1>Pesan Makanan Favoritmu</h1>
+    <p>Dibuat oleh Daniel</p>
+</div>
+
+<!-- SEARCH -->
+<input type="text" id="search" placeholder="Cari makanan..." onkeyup="searchMenu()">
+
+<!-- MENU -->
+<div class="menu" id="menu">
+
+<div class="card">
+<img src="https://via.placeholder.com/150">
+<h2>Bakso</h2>
+<p>Rp 20000</p>
+<button onclick="addCart('Bakso',20000)">Tambah</button>
+</div>
+
+<div class="card">
+<img src="https://via.placeholder.com/150">
+<h2>Mie Ayam</h2>
+<p>Rp 18000</p>
+<button onclick="addCart('Mie Ayam',18000)">Tambah</button>
+</div>
+
+<div class="card">
+<img src="https://via.placeholder.com/150">
+<h2>Nasi Goreng</h2>
+<p>Rp 22000</p>
+<button onclick="addCart('Nasi Goreng',22000)">Tambah</button>
+</div>
+
+</div>
+
+<!-- CART -->
+<div class="cart" id="cart">
+<h2>Keranjang</h2>
+<div id="cartItems"></div>
+<p id="total"></p>
+<button onclick="checkout()">Checkout</button>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">© Daniel 2025</div>
 
 <script src="script.js"></script>
-
 </body>
 </html>
