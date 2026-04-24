@@ -1,46 +1,71 @@
 let cart = [];
 
-function addCart(nama, harga) {
-    cart.push({nama, harga});
-    updateCart();
-}
-
-function updateCart() {
-    let items = document.getElementById("cartItems");
-    let total = 0;
-
-    items.innerHTML = "";
-
-    cart.forEach(item => {
-        items.innerHTML += `<p>${item.nama} - Rp ${item.harga}</p>`;
-        total += item.harga;
-    });
-
-    document.getElementById("total").innerHTML = "Total: Rp " + total;
-    document.getElementById("cartCount").innerHTML = cart.length;
-}
-
 function toggleCart() {
-    document.getElementById("cart").classList.toggle("active");
+  document.getElementById("cart").classList.toggle("active");
 }
 
-function checkout() {
-    let text = "Pesanan:\n";
-
-    cart.forEach(item => {
-        text += item.nama + "\n";
-    });
-
-    let url = `https://wa.me/6281234567890?text=${encodeURIComponent(text)}`;
-    window.open(url);
+function showToast() {
+  let t = document.getElementById("toast");
+  t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),2000);
 }
 
-function searchMenu() {
-    let input = document.getElementById("search").value.toLowerCase();
-    let cards = document.querySelectorAll(".card");
+function addToCart(nama, harga) {
+  let item = cart.find(i => i.nama === nama);
 
-    cards.forEach(card => {
-        let name = card.innerText.toLowerCase();
-        card.style.display = name.includes(input) ? "block" : "none";
-    });
+  if(item){
+    item.qty++;
+  } else {
+    cart.push({nama, harga, qty:1});
+  }
+
+  showToast();
+  renderCart();
+}
+
+function renderCart(){
+  let html = "";
+  let total = 0;
+
+  cart.forEach((item,i)=>{
+    total += item.harga * item.qty;
+
+    html += `
+    <div class="cart-item">
+      ${item.nama} (Rp ${item.harga})
+      <br>
+      <button onclick="changeQty(${i},-1)">-</button>
+      ${item.qty}
+      <button onclick="changeQty(${i},1)">+</button>
+      <button onclick="removeItem(${i})">Hapus</button>
+    </div>
+    `;
+  });
+
+  document.getElementById("cartItems").innerHTML = html;
+  document.getElementById("total").innerText = total;
+}
+
+function changeQty(i,val){
+  cart[i].qty += val;
+  if(cart[i].qty <= 0) cart.splice(i,1);
+  renderCart();
+}
+
+function removeItem(i){
+  cart.splice(i,1);
+  renderCart();
+}
+
+function checkout(){
+  let alamat = document.getElementById("alamat").value;
+  let text = "Pesanan:\n";
+
+  cart.forEach(item=>{
+    text += `${item.nama} x${item.qty}\n`;
+  });
+
+  text += "\nAlamat: " + alamat;
+
+  window.open("https://wa.me/6281234567890?text="+encodeURIComponent(text));
 }
