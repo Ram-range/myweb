@@ -32,11 +32,13 @@ function renderCart(){
 
     html += `
     <div class="cart-item">
-      ${item.nama} (Rp ${item.harga})
-      <br>
+      <b>${item.nama}</b><br>
+      Rp ${item.harga}<br>
+
       <button onclick="changeQty(${i},-1)">-</button>
       ${item.qty}
       <button onclick="changeQty(${i},1)">+</button>
+      <br>
       <button onclick="removeItem(${i})">Hapus</button>
     </div>
     `;
@@ -59,6 +61,7 @@ function removeItem(i){
 
 function checkout(){
   let alamat = document.getElementById("alamat").value;
+
   let text = "Pesanan:\n";
 
   cart.forEach(item=>{
