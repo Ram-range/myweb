@@ -1,20 +1,17 @@
 body {
   margin: 0;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: Arial;
   background: #f4f6f9;
 }
 
-/* NAVBAR */
 .navbar {
   background: linear-gradient(90deg, orange, #ff6600);
   color: white;
-  padding: 15px 20px;
+  padding: 15px;
   display: flex;
   justify-content: space-between;
-  font-weight: bold;
 }
 
-/* MENU */
 .menu {
   display: flex;
   gap: 20px;
@@ -29,12 +26,12 @@ body {
   border-radius: 15px;
   width: 200px;
   text-align: center;
-  transition: 0.3s;
   box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  transition: 0.3s;
 }
 
 .card:hover {
-  transform: translateY(-10px) scale(1.03);
+  transform: translateY(-10px);
 }
 
 img {
@@ -52,14 +49,8 @@ button {
   margin-top: 10px;
   border-radius: 8px;
   cursor: pointer;
-  transition: 0.2s;
 }
 
-button:hover {
-  background: #ff5500;
-}
-
-/* CART */
 .cart {
   position: fixed;
   right: -100%;
@@ -67,7 +58,7 @@ button:hover {
   width: 320px;
   height: 100%;
   background: white;
-  transition: 0.4s ease;
+  transition: 0.4s;
   box-shadow: -5px 0 25px rgba(0,0,0,0.2);
 }
 
@@ -98,12 +89,11 @@ button:hover {
   margin-bottom: 10px;
 }
 
-/* TOAST */
 .toast {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background: #28a745;
+  background: green;
   color: white;
   padding: 12px;
   border-radius: 5px;
@@ -115,12 +105,10 @@ button:hover {
   opacity: 1;
 }
 
-/* FOOTER */
 .footer {
   text-align: center;
   padding: 20px;
   background: #222;
   color: #ccc;
   margin-top: 40px;
-  font-size: 14px;
 }
