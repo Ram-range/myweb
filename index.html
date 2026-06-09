@@ -8,7 +8,16 @@
 </head>
 <body>
 
-<div class="order-container">
+<!-- Loading Screen -->
+<div id="loading-screen" class="loading-screen">
+    <div class="loading-content">
+        <div class="spinner"></div>
+        <div class="loading-text">Memuat Menu...</div>
+        <div class="loading-subtext">FoodOrder by Daniel</div>
+    </div>
+</div>
+
+<div class="order-container" style="display: none;">
     <div class="hero">
         <h1>FoodOrder</h1>
         <p>Pesan langsung • Rasa otentik</p>
@@ -53,22 +62,71 @@
                 </div>
             </div>
         </div>
+
+        <!-- Menu Tambahan -->
+        <div class="menu-item" data-id="teh" data-name="Es Teh Manis" data-price="5000">
+            <div class="item-content">
+                <div class="info">
+                    <div class="item-name">🥤 Es Teh Manis</div>
+                    <div class="price">5000</div>
+                </div>
+                <div class="action">
+                    <button class="btn-tambah">+ Tambah</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="menu-item" data-id="jeruk" data-name="Es Jeruk" data-price="8000">
+            <div class="item-content">
+                <div class="info">
+                    <div class="item-name">🍊 Es Jeruk</div>
+                    <div class="price">8000</div>
+                </div>
+                <div class="action">
+                    <button class="btn-tambah">+ Tambah</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- KERANJANG PESANAN -->
     <div class="cart-section">
         <div class="cart-title">
             <span>🛒</span> <span>Keranjang Pesanan</span>
+            <span class="cart-count" id="cart-count">(0)</span>
         </div>
-        <ul class="cart-items" id="cart-list">
-            <li class="empty-cart">Belum ada pesanan, klik Tambah</li>
-        </ul>
+        <div class="cart-items-container" id="cart-items-container">
+            <ul class="cart-items" id="cart-list">
+                <li class="empty-cart">🍽️ Belum ada pesanan, klik Tambah</li>
+            </ul>
+        </div>
         <div class="cart-total">
             <span>Total</span>
             <span class="total-amount" id="total-price">Rp 0</span>
         </div>
+        
+        <!-- Form Input Data Customer -->
+        <div class="customer-info">
+            <div class="input-group">
+                <label for="customer-name">👤 Nama Pemesan</label>
+                <input type="text" id="customer-name" placeholder="Masukkan nama Anda" class="customer-input">
+            </div>
+            <div class="input-group">
+                <label for="customer-phone">📱 Nomor WhatsApp</label>
+                <input type="tel" id="customer-phone" placeholder="Contoh: 081234567890" class="customer-input">
+            </div>
+            <div class="input-group">
+                <label for="customer-address">📍 Alamat Pengiriman</label>
+                <textarea id="customer-address" rows="2" placeholder="Masukkan alamat lengkap" class="customer-input"></textarea>
+            </div>
+            <div class="input-group">
+                <label for="customer-note">📝 Catatan (opsional)</label>
+                <textarea id="customer-note" rows="2" placeholder="Contoh: tidak pakai sambal, request level pedas" class="customer-input"></textarea>
+            </div>
+        </div>
+
         <div class="order-actions">
-            <button class="btn-order" id="order-btn">✅ Pesan Sekarang</button>
+            <button class="btn-order" id="order-btn">💬 Pesan via WhatsApp</button>
             <button class="btn-reset" id="reset-btn">🗑️ Kosongkan</button>
         </div>
     </div>
