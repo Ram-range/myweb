@@ -144,10 +144,13 @@ body {
     transform: translateY(-2px);
 }
 
+/* Hamburger Menu */
 .nav-toggle {
     display: none;
     flex-direction: column;
     cursor: pointer;
+    padding: 10px;
+    z-index: 1001;
 }
 
 .nav-toggle span {
@@ -156,12 +159,26 @@ body {
     background: white;
     margin: 3px 0;
     transition: 0.3s;
+    border-radius: 3px;
+}
+
+/* Animasi hamburger saat aktif */
+.nav-toggle.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+
+.nav-toggle.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.nav-toggle.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -6px);
 }
 
 /* Hero Section */
 .hero-section {
     background: linear-gradient(135deg, #ff9a3c, #ff6a1a);
-    padding: 60px 24px;
+    padding: 80px 24px;
     color: white;
     text-align: center;
 }
@@ -486,6 +503,11 @@ body {
     height: 28px;
     border-radius: 30px;
     cursor: pointer;
+    font-size: 1rem;
+}
+
+.btn-cart-qty:hover {
+    background: #ffeedd;
 }
 
 .btn-remove-item {
@@ -494,6 +516,11 @@ body {
     font-size: 1.1rem;
     cursor: pointer;
     color: #c57c3a;
+    padding: 0 5px;
+}
+
+.btn-remove-item:hover {
+    color: #e74c3c;
 }
 
 .cart-total {
@@ -545,6 +572,12 @@ body {
 .customer-input:focus {
     outline: none;
     border-color: #ff8c42;
+    box-shadow: 0 0 0 3px rgba(255, 140, 66, 0.1);
+}
+
+textarea.customer-input {
+    resize: vertical;
+    font-family: inherit;
 }
 
 .order-actions {
@@ -569,6 +602,7 @@ body {
 
 .btn-order:hover {
     background: #128C7E;
+    transform: scale(0.98);
 }
 
 .btn-reset {
@@ -576,11 +610,12 @@ body {
     color: #6b4c2c;
 }
 
-/* Contact Section */
-.contact-section {
-    background: #fefaf0;
+.btn-reset:hover {
+    background: #e7d5bd;
+    transform: scale(0.98);
 }
 
+/* Contact Info Cards */
 .contact-info {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -594,6 +629,7 @@ body {
     border-radius: 20px;
     text-align: center;
     transition: all 0.3s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 .contact-card:hover {
@@ -616,6 +652,14 @@ body {
     font-size: 0.9rem;
 }
 
+/* Empty Cart */
+.empty-cart {
+    text-align: center;
+    color: #b87333;
+    font-style: italic;
+    padding: 20px;
+}
+
 /* Footer */
 .footer {
     text-align: center;
@@ -633,17 +677,19 @@ body {
     left: 50%;
     transform: translateX(-50%);
     background: #2e2b28e6;
+    backdrop-filter: blur(8px);
     color: white;
-    padding: 10px 20px;
+    padding: 12px 24px;
     border-radius: 50px;
     font-size: 0.85rem;
     opacity: 0;
     transition: all 0.3s;
     pointer-events: none;
     z-index: 999;
+    white-space: nowrap;
 }
 
-/* Responsive */
+/* ========== RESPONSIVE ========== */
 @media (max-width: 768px) {
     .nav-toggle {
         display: flex;
@@ -653,11 +699,24 @@ body {
         display: none;
         width: 100%;
         flex-direction: column;
+        gap: 0;
         padding: 1rem 0;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        background: linear-gradient(135deg, #ff9a3c, #ff6a1a);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
     }
     
     .nav-menu.active {
         display: flex;
+    }
+    
+    .nav-link {
+        display: block;
+        padding: 12px 24px;
+        width: 100%;
+        text-align: center;
     }
     
     .hero h1 {
@@ -670,20 +729,61 @@ body {
     
     .about-content {
         flex-direction: column;
+        text-align: center;
+    }
+    
+    .about-features {
+        justify-content: center;
     }
     
     .menu-list {
         grid-template-columns: 1fr;
     }
-}
-
-@media (max-width: 480px) {
+    
     .hero-buttons {
         flex-direction: column;
         align-items: center;
     }
     
+    .btn-order-now, .btn-view-menu {
+        width: 200px;
+    }
+    
+    .contact-info {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .toast-msg {
+        white-space: normal;
+        max-width: 80%;
+        text-align: center;
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .section-container {
+        padding: 40px 16px;
+    }
+    
+    .hero {
+        padding: 40px 16px;
+    }
+    
+    .hero h1 {
+        font-size: 1.8rem;
+    }
+    
     .skills-grid {
         grid-template-columns: 1fr;
+    }
+    
+    .contact-info {
+        grid-template-columns: 1fr;
+    }
+    
+    .cart-item-controls {
+        flex-wrap: wrap;
+        justify-content: flex-end;
     }
 }
