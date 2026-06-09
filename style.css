@@ -511,3 +511,8 @@ textarea.customer-input {
         padding: 12px;
     }
 }
+
+/* Tambahan untuk memastikan container tampil */
+.order-container {
+    display: block !important; /* Sementara force display */
+}
