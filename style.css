@@ -14,9 +14,66 @@ body {
     padding: 24px 16px;
 }
 
+/* Loading Screen */
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #ff9a3c, #ff6a1a);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.loading-screen.fade-out {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.loading-content {
+    text-align: center;
+    color: white;
+}
+
+.spinner {
+    width: 60px;
+    height: 60px;
+    border: 5px solid rgba(255, 255, 255, 0.3);
+    border-top: 5px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.loading-subtext {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
 /* Container utama seperti card restoran */
 .order-container {
-    max-width: 520px;
+    max-width: 550px;
     width: 100%;
     margin: 0 auto;
     background-color: #ffffff;
@@ -24,6 +81,18 @@ body {
     box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.05);
     overflow: hidden;
     transition: all 0.2s ease;
+    animation: slideUp 0.5s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Header dengan ilustrasi sederhana */
@@ -143,6 +212,53 @@ body {
     transform: scale(0.95);
 }
 
+/* Customer Info Form */
+.customer-info {
+    background: #fff8f0;
+    border-radius: 20px;
+    padding: 15px;
+    margin: 15px 0;
+    border: 1px solid #ffe1b3;
+}
+
+.input-group {
+    margin-bottom: 12px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #5a3e1b;
+    margin-bottom: 5px;
+}
+
+.customer-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ffd89a;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    background: white;
+    transition: all 0.2s;
+}
+
+.customer-input:focus {
+    outline: none;
+    border-color: #ff8c42;
+    box-shadow: 0 0 0 3px rgba(255, 140, 66, 0.1);
+}
+
+.customer-input::placeholder {
+    color: #c8aa7a;
+    font-size: 0.85rem;
+}
+
+textarea.customer-input {
+    resize: vertical;
+    font-family: inherit;
+}
+
 /* Keranjang / ringkasan pesanan */
 .cart-section {
     background: #fefaf0;
@@ -168,10 +284,19 @@ body {
     font-size: 1.6rem;
 }
 
+.cart-count {
+    margin-left: auto;
+    font-size: 0.9rem;
+    background: #ffd89a;
+    padding: 2px 8px;
+    border-radius: 20px;
+    color: #5a3e1b;
+}
+
 .cart-items {
     list-style: none;
     margin-bottom: 14px;
-    max-height: 220px;
+    max-height: 300px;
     overflow-y: auto;
     padding-right: 5px;
 }
@@ -180,14 +305,27 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 0;
+    padding: 12px 0;
     border-bottom: 1px solid #ffe1b3;
     font-size: 0.95rem;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 .cart-item-name {
     font-weight: 600;
     color: #4a3a28;
+    flex: 1;
 }
 
 .cart-item-controls {
@@ -213,17 +351,23 @@ body {
 .btn-cart-qty {
     background: white;
     border: 1px solid #ffbc6e;
-    width: 26px;
-    height: 26px;
+    width: 30px;
+    height: 30px;
     border-radius: 30px;
     font-weight: bold;
+    font-size: 1.1rem;
     cursor: pointer;
     color: #b45f1b;
-    transition: 0.1s;
+    transition: all 0.2s;
 }
 
 .btn-cart-qty:hover {
     background: #ffeedd;
+    transform: scale(1.05);
+}
+
+.btn-cart-qty:active {
+    transform: scale(0.95);
 }
 
 .btn-remove-item {
@@ -233,7 +377,13 @@ body {
     cursor: pointer;
     color: #c57c3a;
     margin-left: 8px;
-    transition: 0.1s;
+    transition: all 0.2s;
+    padding: 5px;
+}
+
+.btn-remove-item:hover {
+    color: #e74c3c;
+    transform: scale(1.1);
 }
 
 .cart-total {
@@ -275,17 +425,21 @@ body {
     font-weight: 700;
     font-size: 0.9rem;
     cursor: pointer;
-    transition: 0.2s;
+    transition: all 0.2s;
 }
 
 .btn-order {
-    background: #ff8c42;
+    background: #25D366;
     color: white;
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
 .btn-order:hover {
-    background: #e6762e;
+    background: #128C7E;
     transform: scale(0.98);
 }
 
@@ -297,6 +451,7 @@ body {
 
 .btn-reset:hover {
     background: #e7d5bd;
+    transform: scale(0.98);
 }
 
 /* Footer */
@@ -319,15 +474,16 @@ body {
     background: #2e2b28e6;
     backdrop-filter: blur(8px);
     color: white;
-    padding: 10px 22px;
+    padding: 12px 24px;
     border-radius: 50px;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     font-weight: 500;
     opacity: 0;
-    transition: all 0.2s;
+    transition: all 0.3s;
     pointer-events: none;
     z-index: 999;
     white-space: nowrap;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
 @media (max-width: 480px) {
@@ -341,5 +497,17 @@ body {
     }
     .item-name {
         font-size: 1.25rem;
+    }
+    .cart-item-controls {
+        gap: 8px;
+    }
+    .toast-msg {
+        white-space: normal;
+        max-width: 80%;
+        text-align: center;
+        font-size: 0.8rem;
+    }
+    .customer-info {
+        padding: 12px;
     }
 }
