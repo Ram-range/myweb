@@ -10,19 +10,17 @@ const cartCountEl = document.getElementById('cart-count');
 const loadingScreen = document.getElementById('loading-screen');
 const orderContainer = document.querySelector('.order-container');
 
-// Nomor WhatsApp tujuan (ganti dengan nomor WhatsApp restoran)
-const WA_NUMBER = '6281234567890'; // Ganti dengan nomor WhatsApp tujuan
+// Nomor WhatsApp tujuan
+const WA_NUMBER = '6281234567890';
 
-// Fungsi untuk menampilkan notifikasi singkat
+// Fungsi untuk menampilkan notifikasi
 function showToast(message, duration = 1800) {
     const toast = document.getElementById('toast');
     if (!toast) return;
     toast.textContent = message;
     toast.style.opacity = '1';
-    toast.style.transform = 'translateX(-50%) scale(1)';
     setTimeout(() => {
         toast.style.opacity = '0';
-        toast.style.transform = 'translateX(-50%) scale(0.9)';
     }, duration);
 }
 
@@ -74,14 +72,14 @@ function renderCart() {
         grandTotal += subtotal;
 
         innerHtml += `
-            <li data-cart-index="${index}">
+            <li>
                 <div class="cart-item-name">${escapeHtml(item.name)}</div>
                 <div class="cart-item-controls">
                     <button class="btn-cart-qty" data-action="decr" data-id="${item.id}">−</button>
                     <span class="cart-qty">${item.quantity}</span>
                     <button class="btn-cart-qty" data-action="incr" data-id="${item.id}">+</button>
                     <span class="cart-item-price">Rp ${formatNumber(item.price * item.quantity)}</span>
-                    <button class="btn-remove-item" data-id="${item.id}" title="Hapus item">✕</button>
+                    <button class="btn-remove-item" data-id="${item.id}">✕</button>
                 </div>
             </li>
         `;
@@ -91,44 +89,33 @@ function renderCart() {
     totalPriceEl.innerText = `Rp ${formatNumber(grandTotal)}`;
     updateCartCount();
 
-    // Tambahkan event listener untuk tombol +/- dan hapus di setiap item keranjang
+    // Event listener untuk tombol di keranjang
     document.querySelectorAll('.btn-cart-qty').forEach(btn => {
-        btn.removeEventListener('click', handleCartQtyClick);
-        btn.addEventListener('click', handleCartQtyClick);
+        btn.addEventListener('click', (e) => {
+            const action = btn.getAttribute('data-action');
+            const itemId = btn.getAttribute('data-id');
+            if (action === 'incr') {
+                updateQuantity(itemId, 1);
+            } else if (action === 'decr') {
+                updateQuantity(itemId, -1);
+            }
+        });
     });
 
     document.querySelectorAll('.btn-remove-item').forEach(btn => {
-        btn.removeEventListener('click', handleRemoveItemClick);
-        btn.addEventListener('click', handleRemoveItemClick);
+        btn.addEventListener('click', (e) => {
+            const itemId = btn.getAttribute('data-id');
+            removeItemCompletely(itemId);
+        });
     });
 }
 
-// Handler untuk tombol quantity di keranjang
-function handleCartQtyClick(e) {
-    e.stopPropagation();
-    const btn = e.currentTarget;
-    const action = btn.getAttribute('data-action');
-    const itemId = btn.getAttribute('data-id');
-    if (action === 'incr') {
-        updateQuantity(itemId, 1);
-    } else if (action === 'decr') {
-        updateQuantity(itemId, -1);
-    }
-}
-
-// Handler untuk tombol hapus item
-function handleRemoveItemClick(e) {
-    const btn = e.currentTarget;
-    const itemId = btn.getAttribute('data-id');
-    removeItemCompletely(itemId);
-}
-
-// Format angka dengan pemisah ribuan
+// Format angka
 function formatNumber(num) {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 
-// Escape HTML untuk keamanan
+// Escape HTML
 function escapeHtml(str) {
     return str.replace(/[&<>]/g, function(m) {
         if (m === '&') return '&amp;';
@@ -138,26 +125,21 @@ function escapeHtml(str) {
     });
 }
 
-// Fungsi untuk menambah item ke keranjang (dari tombol tambah)
+// Tambah ke keranjang
 function addToCart(id, name, price) {
     const existingItem = cart.find(item => item.id === id);
     if (existingItem) {
         existingItem.quantity += 1;
-        showToast(`+1 ${name} (Total: ${existingItem.quantity})`);
+        showToast(`+1 ${name}`);
     } else {
-        cart.push({
-            id: id,
-            name: name,
-            price: price,
-            quantity: 1
-        });
-        showToast(`✅ ${name} ditambahkan ke keranjang`);
+        cart.push({ id, name, price, quantity: 1 });
+        showToast(`✅ ${name} ditambahkan`);
     }
     renderCart();
     saveCartToLocal();
 }
 
-// Mengupdate quantity: delta = +1 atau -1
+// Update quantity
 function updateQuantity(id, delta) {
     const idx = cart.findIndex(item => item.id === id);
     if (idx === -1) return;
@@ -166,41 +148,40 @@ function updateQuantity(id, delta) {
     const newQty = item.quantity + delta;
     if (newQty <= 0) {
         cart.splice(idx, 1);
-        showToast(`🗑️ ${item.name} dihapus dari keranjang`);
+        showToast(`🗑️ ${item.name} dihapus`);
     } else {
         item.quantity = newQty;
-        const verb = delta > 0 ? 'ditambahkan' : 'dikurangi';
-        showToast(`${item.name} ${verb} → ${item.quantity}`);
+        showToast(`${item.name} → ${item.quantity}`);
     }
     renderCart();
     saveCartToLocal();
 }
 
-// Hapus seluruh item (meskipun quantity > 0)
+// Hapus item
 function removeItemCompletely(id) {
     const idx = cart.findIndex(item => item.id === id);
     if (idx !== -1) {
         const removed = cart[idx];
         cart.splice(idx, 1);
-        showToast(`❌ ${removed.name} dihapus dari pesanan`);
+        showToast(`❌ ${removed.name} dihapus`);
         renderCart();
         saveCartToLocal();
     }
 }
 
-// Reset seluruh keranjang
+// Reset cart
 function resetCart() {
     if (cart.length === 0) {
-        showToast("Keranjang sudah kosong");
+        showToast("Keranjang kosong");
         return;
     }
     cart = [];
     renderCart();
     saveCartToLocal();
-    showToast("🔄 Semua pesanan telah dibatalkan");
+    showToast("🔄 Semua pesanan dibatalkan");
 }
 
-// Format pesanan untuk WhatsApp
+// Format pesan WhatsApp
 function formatWhatsAppMessage() {
     const customerName = document.getElementById('customer-name')?.value.trim();
     const customerPhone = document.getElementById('customer-phone')?.value.trim();
@@ -208,16 +189,12 @@ function formatWhatsAppMessage() {
     const customerNote = document.getElementById('customer-note')?.value.trim();
     
     let message = '*🍽️ PESANAN MAKANAN*%0a%0a';
-    
-    // Data pemesan
     message += `*Data Pemesan:*%0a`;
     if (customerName) message += `Nama: ${customerName}%0a`;
     if (customerPhone) message += `No. WhatsApp: ${customerPhone}%0a`;
     if (customerAddress) message += `Alamat: ${customerAddress}%0a`;
-    message += `%0a`;
+    message += `%0a*Detail Pesanan:*%0a`;
     
-    // Detail pesanan
-    message += `*Detail Pesanan:*%0a`;
     let total = 0;
     cart.forEach((item, index) => {
         const subtotal = item.price * item.quantity;
@@ -226,94 +203,92 @@ function formatWhatsAppMessage() {
     });
     
     message += `%0a*Total: Rp ${formatNumber(total)}*%0a%0a`;
-    
-    // Catatan
-    if (customerNote) {
-        message += `*Catatan:*%0a${customerNote}%0a%0a`;
-    }
-    
-    // Footer
-    message += `_Pesanan dibuat via FoodOrder App_%0a`;
+    if (customerNote) message += `*Catatan:*%0a${customerNote}%0a%0a`;
     message += `_Terima kasih!_`;
     
     return message;
 }
 
-// Kirim pesanan ke WhatsApp
-function sendToWhatsApp() {
-    // Validasi keranjang tidak kosong
+// Kirim ke WhatsApp
+function processOrder() {
     if (cart.length === 0) {
-        showToast("⚠️ Keranjang masih kosong, tambahkan menu dulu yuk!", 2000);
-        return false;
+        showToast("⚠️ Keranjang masih kosong!", 2000);
+        return;
     }
     
-    // Validasi nama pemesan
     const customerName = document.getElementById('customer-name')?.value.trim();
     if (!customerName) {
-        showToast("⚠️ Mohon isi nama pemesan terlebih dahulu!", 2000);
+        showToast("⚠️ Isi nama pemesan!", 2000);
         document.getElementById('customer-name')?.focus();
-        return false;
+        return;
     }
     
-    // Validasi nomor WhatsApp
     const customerPhone = document.getElementById('customer-phone')?.value.trim();
     if (!customerPhone) {
-        showToast("⚠️ Mohon isi nomor WhatsApp untuk konfirmasi!", 2000);
+        showToast("⚠️ Isi nomor WhatsApp!", 2000);
         document.getElementById('customer-phone')?.focus();
-        return false;
+        return;
     }
     
-    // Validasi format nomor WhatsApp (minimal 10 digit)
-    const phoneRegex = /^[0-9]{10,13}$/;
-    if (!phoneRegex.test(customerPhone.replace(/\s/g, ''))) {
-        showToast("⚠️ Nomor WhatsApp tidak valid! Masukkan 10-13 digit angka.", 2500);
-        document.getElementById('customer-phone')?.focus();
-        return false;
-    }
-    
-    // Validasi alamat
     const customerAddress = document.getElementById('customer-address')?.value.trim();
     if (!customerAddress) {
-        showToast("⚠️ Mohon isi alamat pengiriman!", 2000);
+        showToast("⚠️ Isi alamat pengiriman!", 2000);
         document.getElementById('customer-address')?.focus();
-        return false;
-    }
-    
-    return true;
-}
-
-// Proses order via WhatsApp
-function processOrder() {
-    if (!sendToWhatsApp()) {
         return;
     }
     
     const message = formatWhatsAppMessage();
     const waLink = `https://wa.me/${WA_NUMBER}?text=${message}`;
     
-    // Tampilkan konfirmasi sebelum redirect ke WhatsApp
-    const confirmed = confirm(`📱 Anda akan diarahkan ke WhatsApp untuk melanjutkan pesanan.\n\nPastikan nomor WhatsApp Anda aktif.\n\nLanjutkan?`);
-    
+    const confirmed = confirm(`Lanjutkan ke WhatsApp?`);
     if (confirmed) {
-        // Simpan data ke localStorage sebelum redirect
-        saveCartToLocal();
-        
-        // Buka WhatsApp
         window.open(waLink, '_blank');
-        
-        // Tampilkan notifikasi
         showToast("✅ Mengarahkan ke WhatsApp...", 2000);
     }
 }
 
-// Event listener tombol tambah pada masing-masing menu
+// Navigasi aktif berdasarkan scroll
+function setActiveNav() {
+    const sections = document.querySelectorAll('section');
+    const navLinks = document.querySelectorAll('.nav-link');
+    
+    let current = '';
+    sections.forEach(section => {
+        const sectionTop = section.offsetTop - 100;
+        const sectionHeight = section.clientHeight;
+        if (pageYOffset >= sectionTop) {
+            current = section.getAttribute('id');
+        }
+    });
+    
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${current}`) {
+            link.classList.add('active');
+        }
+    });
+}
+
+// Mobile menu toggle
+function initMobileMenu() {
+    const toggle = document.getElementById('nav-toggle');
+    const navMenu = document.getElementById('nav-menu');
+    
+    if (toggle && navMenu) {
+        toggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            toggle.classList.toggle('active');
+        });
+    }
+}
+
+// Bind menu buttons
 function bindMenuButtons() {
     const menuItems = document.querySelectorAll('.menu-item');
     menuItems.forEach(menu => {
         const tambahBtn = menu.querySelector('.btn-tambah');
         if (!tambahBtn) return;
         
-        // Hapus event listener lama jika ada
         const newBtn = tambahBtn.cloneNode(true);
         tambahBtn.parentNode.replaceChild(newBtn, tambahBtn);
         
@@ -321,66 +296,45 @@ function bindMenuButtons() {
         const name = menu.getAttribute('data-name');
         const price = parseInt(menu.getAttribute('data-price'), 10);
         
-        newBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
+        newBtn.addEventListener('click', () => {
             addToCart(id, name, price);
         });
     });
 }
 
-// ===== INI YANG PENTING: LOADING HILANG SETELAH 1 DETIK =====
+// Hilangkan loading
 function hideLoadingScreen() {
-    // Loading akan hilang setelah 1 detik
-    setTimeout(function() {
+    setTimeout(() => {
         if (loadingScreen) {
             loadingScreen.style.opacity = '0';
-            loadingScreen.style.visibility = 'hidden';
-            setTimeout(function() {
+            setTimeout(() => {
                 loadingScreen.style.display = 'none';
                 if (orderContainer) {
                     orderContainer.style.display = 'block';
                 }
             }, 500);
-        } else {
-            // Jika loading screen tidak ada, langsung tampilkan container
-            if (orderContainer) {
-                orderContainer.style.display = 'block';
-            }
         }
-    }, 1000); // ← INI DURASI LOADING: 1 DETIK
+    }, 1000);
 }
 
-// Inisialisasi semua event + load data
+// Inisialisasi
 function init() {
-    console.log("Mulai loading...");
-    
-    // Load data dari localStorage
     loadCartFromLocal();
-    
-    // Bind menu buttons
     bindMenuButtons();
+    initMobileMenu();
     
-    // Event untuk order dan reset
-    if (orderBtn) {
-        orderBtn.removeEventListener('click', processOrder);
-        orderBtn.addEventListener('click', processOrder);
-    }
-    if (resetBtn) {
-        resetBtn.removeEventListener('click', resetCart);
-        resetBtn.addEventListener('click', resetCart);
-    }
+    if (orderBtn) orderBtn.addEventListener('click', processOrder);
+    if (resetBtn) resetBtn.addEventListener('click', resetCart);
     
-    // Jalankan fungsi untuk menghilangkan loading
+    window.addEventListener('scroll', setActiveNav);
+    setActiveNav();
+    
     hideLoadingScreen();
-    
-    console.log("Loading selesai, web akan tampil dalam 1 detik");
 }
 
-// Jalankan init ketika halaman siap
+// Jalankan init
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
 } else {
-    // DOM sudah siap, langsung jalankan
     init();
 }
