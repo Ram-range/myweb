@@ -1,66 +1,84 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FoodOrder</title>
-
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>FoodOrder - Pesan Makanan</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<div class="navbar">
-  🍔 FoodOrder
-  <button onclick="toggleCart()">🛒</button>
+<div class="order-container">
+    <div class="hero">
+        <h1>FoodOrder</h1>
+        <p>Pesan langsung • Rasa otentik</p>
+    </div>
+
+    <div class="menu-list">
+        <!-- Menu Bakso -->
+        <div class="menu-item" data-id="bakso" data-name="Bakso" data-price="20000">
+            <div class="item-content">
+                <div class="info">
+                    <div class="item-name">🍲 Bakso</div>
+                    <div class="price">20000</div>
+                </div>
+                <div class="action">
+                    <button class="btn-tambah">+ Tambah</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menu Mie Ayam -->
+        <div class="menu-item" data-id="mieayam" data-name="Mie Ayam" data-price="18000">
+            <div class="item-content">
+                <div class="info">
+                    <div class="item-name">🍜 Mie Ayam</div>
+                    <div class="price">18000</div>
+                </div>
+                <div class="action">
+                    <button class="btn-tambah">+ Tambah</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menu Nasi Goreng -->
+        <div class="menu-item" data-id="nasgor" data-name="Nasi Goreng" data-price="22000">
+            <div class="item-content">
+                <div class="info">
+                    <div class="item-name">🍚 Nasi Goreng</div>
+                    <div class="price">22000</div>
+                </div>
+                <div class="action">
+                    <button class="btn-tambah">+ Tambah</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- KERANJANG PESANAN -->
+    <div class="cart-section">
+        <div class="cart-title">
+            <span>🛒</span> <span>Keranjang Pesanan</span>
+        </div>
+        <ul class="cart-items" id="cart-list">
+            <li class="empty-cart">Belum ada pesanan, klik Tambah</li>
+        </ul>
+        <div class="cart-total">
+            <span>Total</span>
+            <span class="total-amount" id="total-price">Rp 0</span>
+        </div>
+        <div class="order-actions">
+            <button class="btn-order" id="order-btn">✅ Pesan Sekarang</button>
+            <button class="btn-reset" id="reset-btn">🗑️ Kosongkan</button>
+        </div>
+    </div>
+
+    <div class="footer">
+        Dibuat oleh Daniel © 2026
+    </div>
 </div>
 
-<div class="menu">
-
-<div class="card">
-<img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Bakso_malang.jpg">
-<h3>Bakso</h3>
-<p>Rp 20000</p>
-<button onclick="addToCart('Bakso',20000)">Tambah</button>
-</div>
-
-<div class="card">
-<img src="https://upload.wikimedia.org/wikipedia/commons/8/87/Mie_ayam_jakarta.jpg">
-<h3>Mie Ayam</h3>
-<p>Rp 18000</p>
-<button onclick="addToCart('Mie Ayam',18000)">Tambah</button>
-</div>
-
-<div class="Card">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/3/3b/Nasi_goreng_indonesia.jpg">
-<h3>Nasi Goreng</h3>
-<p>Rp 22000</p>
-<button onclick="addToCart('Nasi Goreng',22000)">Tambah</button>
-</div>
-
-</div>
-
-<!-- CART -->
-<div id="cart" class="cart">
-<div class="cart-header">
-  <h3>Keranjang</h3>
-  <button onclick="toggleCart()">❌</button>
-</div>
-
-<div id="cartItems"></div>
-
-<div class="cart-footer">
-<input type="text" id="alamat" placeholder="Alamat...">
-<h3>Total: Rp <span id="total">0</span></h3>
-<button onclick="checkout()">Pesan</button>
-</div>
-</div>
-
-<div id="toast" class="toast">Berhasil ditambahkan!</div>
-
-<footer class="footer">
-  Dibuat oleh Daniel © 2025
-</footer>
+<div id="toast" class="toast-msg"></div>
 
 <script src="script.js"></script>
 </body>
