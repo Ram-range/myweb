@@ -18,121 +18,266 @@
 </div>
 
 <div class="order-container" style="display: none;">
-    <div class="hero">
-        <h1>FoodOrder</h1>
-        <p>Pesan langsung • Rasa otentik</p>
-    </div>
+    
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <span class="logo-icon">🍜</span>
+                <span class="logo-text">FoodOrder</span>
+            </div>
+            <div class="nav-menu" id="nav-menu">
+                <a href="#home" class="nav-link active">Home</a>
+                <a href="#about" class="nav-link">About</a>
+                <a href="#skills" class="nav-link">Skills</a>
+                <a href="#projects" class="nav-link">Projects</a>
+                <a href="#contact" class="nav-link">Contact</a>
+            </div>
+            <div class="nav-toggle" id="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
 
-    <div class="menu-list">
-        <!-- Menu Bakso -->
-        <div class="menu-item" data-id="bakso" data-name="Bakso" data-price="20000">
-            <div class="item-content">
-                <div class="info">
-                    <div class="item-name">🍲 Bakso</div>
-                    <div class="price">20000</div>
-                </div>
-                <div class="action">
-                    <button class="btn-tambah">+ Tambah</button>
-                </div>
+    <!-- Hero Section / Home -->
+    <section id="home" class="hero-section">
+        <div class="hero">
+            <h1>FoodOrder</h1>
+            <p>Pesan langsung • Rasa otentik</p>
+            <div class="hero-buttons">
+                <button class="btn-order-now" onclick="document.getElementById('menu-section').scrollIntoView({behavior: 'smooth'})">Pesan Sekarang</button>
+                <button class="btn-view-menu" onclick="document.getElementById('menu-section').scrollIntoView({behavior: 'smooth'})">Lihat Menu</button>
             </div>
         </div>
+    </section>
 
-        <!-- Menu Mie Ayam -->
-        <div class="menu-item" data-id="mieayam" data-name="Mie Ayam" data-price="18000">
-            <div class="item-content">
-                <div class="info">
-                    <div class="item-name">🍜 Mie Ayam</div>
-                    <div class="price">18000</div>
+    <!-- About Section -->
+    <section id="about" class="about-section">
+        <div class="section-container">
+            <h2 class="section-title">Tentang Kami</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>FoodOrder adalah platform pemesanan makanan online yang menghadirkan cita rasa otentik dari berbagai kuliner Nusantara.</p>
+                    <p>Didirikan pada tahun 2025, kami berkomitmen untuk memberikan pengalaman memesan makanan yang mudah, cepat, dan menyenangkan.</p>
+                    <div class="about-features">
+                        <div class="feature">
+                            <span>🚚</span>
+                            <span>Pengiriman Cepat</span>
+                        </div>
+                        <div class="feature">
+                            <span>💰</span>
+                            <span>Harga Terjangkau</span>
+                        </div>
+                        <div class="feature">
+                            <span>⭐</span>
+                            <span>Kualitas Terjamin</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="action">
-                    <button class="btn-tambah">+ Tambah</button>
+                <div class="about-image">
+                    <div class="about-icon">🍲</div>
                 </div>
             </div>
         </div>
+    </section>
 
-        <!-- Menu Nasi Goreng -->
-        <div class="menu-item" data-id="nasgor" data-name="Nasi Goreng" data-price="22000">
-            <div class="item-content">
-                <div class="info">
-                    <div class="item-name">🍚 Nasi Goreng</div>
-                    <div class="price">22000</div>
+    <!-- Skills Section -->
+    <section id="skills" class="skills-section">
+        <div class="section-container">
+            <h2 class="section-title">Keunggulan Kami</h2>
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <div class="skill-icon">⚡</div>
+                    <h3>Fast Response</h3>
+                    <p>Pesanan diproses dalam hitungan menit</p>
+                    <div class="skill-bar">
+                        <div class="skill-progress" style="width: 95%"></div>
+                    </div>
+                    <span class="skill-percent">95%</span>
                 </div>
-                <div class="action">
-                    <button class="btn-tambah">+ Tambah</button>
+                <div class="skill-card">
+                    <div class="skill-icon">🍳</div>
+                    <h3>Food Quality</h3>
+                    <p>Bahan segar dan berkualitas</p>
+                    <div class="skill-bar">
+                        <div class="skill-progress" style="width: 98%"></div>
+                    </div>
+                    <span class="skill-percent">98%</span>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">💬</div>
+                    <h3>Customer Service</h3>
+                    <p>Support 24/7 siap membantu</p>
+                    <div class="skill-bar">
+                        <div class="skill-progress" style="width: 92%"></div>
+                    </div>
+                    <span class="skill-percent">92%</span>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">🚀</div>
+                    <h3>Fast Delivery</h3>
+                    <p>Pengiriman tepat waktu</p>
+                    <div class="skill-bar">
+                        <div class="skill-progress" style="width: 90%"></div>
+                    </div>
+                    <span class="skill-percent">90%</span>
                 </div>
             </div>
         </div>
+    </section>
 
-        <!-- Menu Tambahan -->
-        <div class="menu-item" data-id="teh" data-name="Es Teh Manis" data-price="5000">
-            <div class="item-content">
-                <div class="info">
-                    <div class="item-name">🥤 Es Teh Manis</div>
-                    <div class="price">5000</div>
+    <!-- Projects / Menu Section -->
+    <section id="projects" class="projects-section">
+        <div class="section-container">
+            <h2 class="section-title">Menu Pilihan</h2>
+            <p class="section-subtitle">Nikmati berbagai hidangan lezat dari kami</p>
+            <div class="menu-list" id="menu-section">
+                <!-- Menu Bakso -->
+                <div class="menu-item" data-id="bakso" data-name="Bakso" data-price="20000">
+                    <div class="item-content">
+                        <div class="info">
+                            <div class="item-name">🍲 Bakso</div>
+                            <div class="price">20000</div>
+                        </div>
+                        <div class="action">
+                            <button class="btn-tambah">+ Tambah</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="action">
-                    <button class="btn-tambah">+ Tambah</button>
-                </div>
-            </div>
-        </div>
 
-        <div class="menu-item" data-id="jeruk" data-name="Es Jeruk" data-price="8000">
-            <div class="item-content">
-                <div class="info">
-                    <div class="item-name">🍊 Es Jeruk</div>
-                    <div class="price">8000</div>
+                <!-- Menu Mie Ayam -->
+                <div class="menu-item" data-id="mieayam" data-name="Mie Ayam" data-price="18000">
+                    <div class="item-content">
+                        <div class="info">
+                            <div class="item-name">🍜 Mie Ayam</div>
+                            <div class="price">18000</div>
+                        </div>
+                        <div class="action">
+                            <button class="btn-tambah">+ Tambah</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="action">
-                    <button class="btn-tambah">+ Tambah</button>
+
+                <!-- Menu Nasi Goreng -->
+                <div class="menu-item" data-id="nasgor" data-name="Nasi Goreng" data-price="22000">
+                    <div class="item-content">
+                        <div class="info">
+                            <div class="item-name">🍚 Nasi Goreng</div>
+                            <div class="price">22000</div>
+                        </div>
+                        <div class="action">
+                            <button class="btn-tambah">+ Tambah</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Menu Tambahan -->
+                <div class="menu-item" data-id="teh" data-name="Es Teh Manis" data-price="5000">
+                    <div class="item-content">
+                        <div class="info">
+                            <div class="item-name">🥤 Es Teh Manis</div>
+                            <div class="price">5000</div>
+                        </div>
+                        <div class="action">
+                            <button class="btn-tambah">+ Tambah</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menu-item" data-id="jeruk" data-name="Es Jeruk" data-price="8000">
+                    <div class="item-content">
+                        <div class="info">
+                            <div class="item-name">🍊 Es Jeruk</div>
+                            <div class="price">8000</div>
+                        </div>
+                        <div class="action">
+                            <button class="btn-tambah">+ Tambah</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- KERANJANG PESANAN -->
-    <div class="cart-section">
-        <div class="cart-title">
-            <span>🛒</span> <span>Keranjang Pesanan</span>
-            <span class="cart-count" id="cart-count">(0)</span>
-        </div>
-        <div class="cart-items-container" id="cart-items-container">
-            <ul class="cart-items" id="cart-list">
-                <li class="empty-cart">🍽️ Belum ada pesanan, klik Tambah</li>
-            </ul>
-        </div>
-        <div class="cart-total">
-            <span>Total</span>
-            <span class="total-amount" id="total-price">Rp 0</span>
-        </div>
-        
-        <!-- Form Input Data Customer -->
-        <div class="customer-info">
-            <div class="input-group">
-                <label for="customer-name">👤 Nama Pemesan</label>
-                <input type="text" id="customer-name" placeholder="Masukkan nama Anda" class="customer-input">
-            </div>
-            <div class="input-group">
-                <label for="customer-phone">📱 Nomor WhatsApp</label>
-                <input type="tel" id="customer-phone" placeholder="Contoh: 081234567890" class="customer-input">
-            </div>
-            <div class="input-group">
-                <label for="customer-address">📍 Alamat Pengiriman</label>
-                <textarea id="customer-address" rows="2" placeholder="Masukkan alamat lengkap" class="customer-input"></textarea>
-            </div>
-            <div class="input-group">
-                <label for="customer-note">📝 Catatan (opsional)</label>
-                <textarea id="customer-note" rows="2" placeholder="Contoh: tidak pakai sambal, request level pedas" class="customer-input"></textarea>
-            </div>
-        </div>
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section">
+        <div class="section-container">
+            <h2 class="section-title">Hubungi Kami</h2>
+            <p class="section-subtitle">Isi form di bawah untuk memesan atau bertanya</p>
+            
+            <!-- KERANJANG PESANAN -->
+            <div class="cart-section">
+                <div class="cart-title">
+                    <span>🛒</span> <span>Keranjang Pesanan</span>
+                    <span class="cart-count" id="cart-count">(0)</span>
+                </div>
+                <div class="cart-items-container" id="cart-items-container">
+                    <ul class="cart-items" id="cart-list">
+                        <li class="empty-cart">🍽️ Belum ada pesanan, klik Tambah</li>
+                    </ul>
+                </div>
+                <div class="cart-total">
+                    <span>Total</span>
+                    <span class="total-amount" id="total-price">Rp 0</span>
+                </div>
+                
+                <!-- Form Input Data Customer -->
+                <div class="customer-info">
+                    <h3 class="form-title">Data Pemesan</h3>
+                    <div class="input-group">
+                        <label for="customer-name">👤 Nama Pemesan</label>
+                        <input type="text" id="customer-name" placeholder="Masukkan nama Anda" class="customer-input">
+                    </div>
+                    <div class="input-group">
+                        <label for="customer-phone">📱 Nomor WhatsApp</label>
+                        <input type="tel" id="customer-phone" placeholder="Contoh: 081234567890" class="customer-input">
+                    </div>
+                    <div class="input-group">
+                        <label for="customer-address">📍 Alamat Pengiriman</label>
+                        <textarea id="customer-address" rows="2" placeholder="Masukkan alamat lengkap" class="customer-input"></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label for="customer-note">📝 Catatan (opsional)</label>
+                        <textarea id="customer-note" rows="2" placeholder="Contoh: tidak pakai sambal, request level pedas" class="customer-input"></textarea>
+                    </div>
+                </div>
 
-        <div class="order-actions">
-            <button class="btn-order" id="order-btn">💬 Pesan via WhatsApp</button>
-            <button class="btn-reset" id="reset-btn">🗑️ Kosongkan</button>
+                <div class="order-actions">
+                    <button class="btn-order" id="order-btn">💬 Pesan via WhatsApp</button>
+                    <button class="btn-reset" id="reset-btn">🗑️ Kosongkan</button>
+                </div>
+            </div>
+
+            <!-- Contact Info -->
+            <div class="contact-info">
+                <div class="contact-card">
+                    <div class="contact-icon">📞</div>
+                    <h4>Telepon</h4>
+                    <p>+62 812 3456 7890</p>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-icon">✉️</div>
+                    <h4>Email</h4>
+                    <p>info@foodorder.com</p>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-icon">📍</div>
+                    <h4>Alamat</h4>
+                    <p>Jl. Makan Enak No. 123, Jakarta</p>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-icon">⏰</div>
+                    <h4>Jam Operasional</h4>
+                    <p>09:00 - 21:00 WIB</p>
+                </div>
+            </div>
         </div>
-    </div>
+    </section>
 
     <div class="footer">
-        Dibuat oleh Daniel © 2026
+        Dibuat oleh Daniel © 2025
     </div>
 </div>
 
