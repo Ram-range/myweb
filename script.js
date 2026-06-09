@@ -329,23 +329,31 @@ function bindMenuButtons() {
     });
 }
 
-// HILANGKAN LOADING SCREEN LANGSUNG
+// ===== INI YANG PENTING: LOADING HILANG SETELAH 1 DETIK =====
 function hideLoadingScreen() {
-    // Langsung sembunyikan loading screen tanpa delay
-    if (loadingScreen) {
-        loadingScreen.style.display = 'none';
-    }
-    if (orderContainer) {
-        orderContainer.style.display = 'block';
-    }
+    // Loading akan hilang setelah 1 detik
+    setTimeout(function() {
+        if (loadingScreen) {
+            loadingScreen.style.opacity = '0';
+            loadingScreen.style.visibility = 'hidden';
+            setTimeout(function() {
+                loadingScreen.style.display = 'none';
+                if (orderContainer) {
+                    orderContainer.style.display = 'block';
+                }
+            }, 500);
+        } else {
+            // Jika loading screen tidak ada, langsung tampilkan container
+            if (orderContainer) {
+                orderContainer.style.display = 'block';
+            }
+        }
+    }, 1000); // ← INI DURASI LOADING: 1 DETIK
 }
 
 // Inisialisasi semua event + load data
 function init() {
-    console.log("Init function started"); // Untuk debugging
-    
-    // Sembunyikan loading screen langsung
-    hideLoadingScreen();
+    console.log("Mulai loading...");
     
     // Load data dari localStorage
     loadCartFromLocal();
@@ -363,7 +371,10 @@ function init() {
         resetBtn.addEventListener('click', resetCart);
     }
     
-    console.log("Init function completed"); // Untuk debugging
+    // Jalankan fungsi untuk menghilangkan loading
+    hideLoadingScreen();
+    
+    console.log("Loading selesai, web akan tampil dalam 1 detik");
 }
 
 // Jalankan init ketika halaman siap
