@@ -6,6 +6,12 @@ const cartListEl = document.getElementById('cart-list');
 const totalPriceEl = document.getElementById('total-price');
 const orderBtn = document.getElementById('order-btn');
 const resetBtn = document.getElementById('reset-btn');
+const cartCountEl = document.getElementById('cart-count');
+const loadingScreen = document.getElementById('loading-screen');
+const orderContainer = document.querySelector('.order-container');
+
+// Nomor WhatsApp tujuan (ganti dengan nomor WhatsApp restoran)
+const WA_NUMBER = '6281234567890'; // Ganti dengan nomor WhatsApp tujuan
 
 // Fungsi untuk menampilkan notifikasi singkat
 function showToast(message, duration = 1800) {
@@ -40,6 +46,14 @@ function loadCartFromLocal() {
     renderCart();
 }
 
+// Update counter keranjang
+function updateCartCount() {
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    if (cartCountEl) {
+        cartCountEl.textContent = `(${totalItems})`;
+    }
+}
+
 // Render ulang tampilan keranjang
 function renderCart() {
     if (!cartListEl) return;
@@ -47,6 +61,7 @@ function renderCart() {
     if (cart.length === 0) {
         cartListEl.innerHTML = '<li class="empty-cart">🍽️ Belum ada pesanan, klik Tambah</li>';
         totalPriceEl.innerText = 'Rp 0';
+        updateCartCount();
         return;
     }
 
@@ -73,27 +88,38 @@ function renderCart() {
 
     cartListEl.innerHTML = innerHtml;
     totalPriceEl.innerText = `Rp ${formatNumber(grandTotal)}`;
+    updateCartCount();
 
     // Tambahkan event listener untuk tombol +/- dan hapus di setiap item keranjang
     document.querySelectorAll('.btn-cart-qty').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const action = btn.getAttribute('data-action');
-            const itemId = btn.getAttribute('data-id');
-            if (action === 'incr') {
-                updateQuantity(itemId, 1);
-            } else if (action === 'decr') {
-                updateQuantity(itemId, -1);
-            }
-        });
+        btn.removeEventListener('click', handleCartQtyClick);
+        btn.addEventListener('click', handleCartQtyClick);
     });
 
     document.querySelectorAll('.btn-remove-item').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const itemId = btn.getAttribute('data-id');
-            removeItemCompletely(itemId);
-        });
+        btn.removeEventListener('click', handleRemoveItemClick);
+        btn.addEventListener('click', handleRemoveItemClick);
     });
+}
+
+// Handler untuk tombol quantity di keranjang
+function handleCartQtyClick(e) {
+    e.stopPropagation();
+    const btn = e.currentTarget;
+    const action = btn.getAttribute('data-action');
+    const itemId = btn.getAttribute('data-id');
+    if (action === 'incr') {
+        updateQuantity(itemId, 1);
+    } else if (action === 'decr') {
+        updateQuantity(itemId, -1);
+    }
+}
+
+// Handler untuk tombol hapus item
+function handleRemoveItemClick(e) {
+    const btn = e.currentTarget;
+    const itemId = btn.getAttribute('data-id');
+    removeItemCompletely(itemId);
 }
 
 // Format angka dengan pemisah ribuan
@@ -116,7 +142,7 @@ function addToCart(id, name, price) {
     const existingItem = cart.find(item => item.id === id);
     if (existingItem) {
         existingItem.quantity += 1;
-        showToast(`+1 ${name} ditambahkan`);
+        showToast(`+1 ${name} (Total: ${existingItem.quantity})`);
     } else {
         cart.push({
             id: id,
@@ -173,24 +199,116 @@ function resetCart() {
     showToast("🔄 Semua pesanan telah dibatalkan");
 }
 
-// Proses order (simulasi)
-function processOrder() {
+// Format pesanan untuk WhatsApp
+function formatWhatsAppMessage() {
+    const customerName = document.getElementById('customer-name')?.value.trim();
+    const customerPhone = document.getElementById('customer-phone')?.value.trim();
+    const customerAddress = document.getElementById('customer-address')?.value.trim();
+    const customerNote = document.getElementById('customer-note')?.value.trim();
+    
+    let message = '*🍽️ PESANAN MAKANAN*%0a%0a';
+    
+    // Data pemesan
+    message += `*Data Pemesan:*%0a`;
+    if (customerName) message += `Nama: ${customerName}%0a`;
+    if (customerPhone) message += `No. WhatsApp: ${customerPhone}%0a`;
+    if (customerAddress) message += `Alamat: ${customerAddress}%0a`;
+    message += `%0a`;
+    
+    // Detail pesanan
+    message += `*Detail Pesanan:*%0a`;
+    let total = 0;
+    cart.forEach((item, index) => {
+        const subtotal = item.price * item.quantity;
+        total += subtotal;
+        message += `${index + 1}. ${item.name} x${item.quantity} = Rp ${formatNumber(subtotal)}%0a`;
+    });
+    
+    message += `%0a*Total: Rp ${formatNumber(total)}*%0a%0a`;
+    
+    // Catatan
+    if (customerNote) {
+        message += `*Catatan:*%0a${customerNote}%0a%0a`;
+    }
+    
+    // Footer
+    message += `_Pesanan dibuat via FoodOrder App_%0a`;
+    message += `_Terima kasih!_`;
+    
+    return message;
+}
+
+// Kirim pesanan ke WhatsApp
+function sendToWhatsApp() {
+    // Validasi keranjang tidak kosong
     if (cart.length === 0) {
         showToast("⚠️ Keranjang masih kosong, tambahkan menu dulu yuk!", 2000);
+        return false;
+    }
+    
+    // Validasi nama pemesan
+    const customerName = document.getElementById('customer-name')?.value.trim();
+    if (!customerName) {
+        showToast("⚠️ Mohon isi nama pemesan terlebih dahulu!", 2000);
+        document.getElementById('customer-name')?.focus();
+        return false;
+    }
+    
+    // Validasi nomor WhatsApp
+    const customerPhone = document.getElementById('customer-phone')?.value.trim();
+    if (!customerPhone) {
+        showToast("⚠️ Mohon isi nomor WhatsApp untuk konfirmasi!", 2000);
+        document.getElementById('customer-phone')?.focus();
+        return false;
+    }
+    
+    // Validasi format nomor WhatsApp (minimal 10 digit)
+    const phoneRegex = /^[0-9]{10,13}$/;
+    if (!phoneRegex.test(customerPhone.replace(/\s/g, ''))) {
+        showToast("⚠️ Nomor WhatsApp tidak valid! Masukkan 10-13 digit angka.", 2500);
+        document.getElementById('customer-phone')?.focus();
+        return false;
+    }
+    
+    // Validasi alamat
+    const customerAddress = document.getElementById('customer-address')?.value.trim();
+    if (!customerAddress) {
+        showToast("⚠️ Mohon isi alamat pengiriman!", 2000);
+        document.getElementById('customer-address')?.focus();
+        return false;
+    }
+    
+    return true;
+}
+
+// Proses order via WhatsApp
+function processOrder() {
+    if (!sendToWhatsApp()) {
         return;
     }
-
-    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    const itemSummary = cart.map(item => `${item.name} x${item.quantity}`).join(', ');
     
-    const userConfirmed = confirm(`🛍️ Pesanan Anda:\n${itemSummary}\nTotal: Rp ${formatNumber(total)}\n\nKonfirmasi pesanan?`);
-    if (userConfirmed) {
-        showToast(`🎉 Pesanan berhasil! Terima kasih. Total Rp ${formatNumber(total)}`, 2500);
-        cart = [];
-        renderCart();
+    const message = formatWhatsAppMessage();
+    const waLink = `https://wa.me/${WA_NUMBER}?text=${message}`;
+    
+    // Tampilkan konfirmasi sebelum redirect ke WhatsApp
+    const confirmed = confirm(`📱 Anda akan diarahkan ke WhatsApp untuk melanjutkan pesanan.\n\nPastikan nomor WhatsApp Anda aktif.\n\nLanjutkan?`);
+    
+    if (confirmed) {
+        // Simpan data ke localStorage sebelum redirect (opsional)
         saveCartToLocal();
-    } else {
-        showToast("Pesanan dibatalkan", 1500);
+        
+        // Buka WhatsApp
+        window.open(waLink, '_blank');
+        
+        // Tampilkan notifikasi
+        showToast("✅ Mengarahkan ke WhatsApp...", 2000);
+        
+        // Kosongkan keranjang setelah sukses (opsional, bisa juga tidak)
+        // setTimeout(() => {
+        //     cart = [];
+        //     renderCart();
+        //     saveCartToLocal();
+        // }, 3000);
     }
 }
 
@@ -200,26 +318,66 @@ function bindMenuButtons() {
     menuItems.forEach(menu => {
         const tambahBtn = menu.querySelector('.btn-tambah');
         if (!tambahBtn) return;
+        
+        // Hapus event listener lama jika ada
+        const newBtn = tambahBtn.cloneNode(true);
+        tambahBtn.parentNode.replaceChild(newBtn, tambahBtn);
+        
         const id = menu.getAttribute('data-id');
         const name = menu.getAttribute('data-name');
         const price = parseInt(menu.getAttribute('data-price'), 10);
         
-        const newBtn = tambahBtn.cloneNode(true);
-        tambahBtn.parentNode.replaceChild(newBtn, tambahBtn);
-        
         newBtn.addEventListener('click', (e) => {
             e.preventDefault();
+            e.stopPropagation();
             addToCart(id, name, price);
         });
     });
 }
 
+// Animasi loading screen
+function hideLoadingScreen() {
+    setTimeout(() => {
+        loadingScreen.classList.add('fade-out');
+        setTimeout(() => {
+            loadingScreen.style.display = 'none';
+            if (orderContainer) {
+                orderContainer.style.display = 'block';
+            }
+        }, 500);
+    }, 1500);
+}
+
 // Inisialisasi semua event + load data
 function init() {
+    // Tampilkan loading screen dulu
+    if (loadingScreen) {
+        loadingScreen.style.display = 'flex';
+    }
+    if (orderContainer) {
+        orderContainer.style.display = 'none';
+    }
+    
+    // Load data dari localStorage
     loadCartFromLocal();
-    bindMenuButtons();
-    if (orderBtn) orderBtn.addEventListener('click', processOrder);
-    if (resetBtn) resetBtn.addEventListener('click', resetCart);
+    
+    // Sembunyikan loading screen setelah delay
+    hideLoadingScreen();
+    
+    // Bind menu buttons setelah loading selesai
+    setTimeout(() => {
+        bindMenuButtons();
+    }, 1600);
+    
+    // Event untuk order dan reset
+    if (orderBtn) {
+        orderBtn.removeEventListener('click', processOrder);
+        orderBtn.addEventListener('click', processOrder);
+    }
+    if (resetBtn) {
+        resetBtn.removeEventListener('click', resetCart);
+        resetBtn.addEventListener('click', resetCart);
+    }
 }
 
 // Panggil init saat halaman siap
