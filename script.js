@@ -16,6 +16,7 @@ const WA_NUMBER = '6281234567890'; // Ganti dengan nomor WhatsApp tujuan
 // Fungsi untuk menampilkan notifikasi singkat
 function showToast(message, duration = 1800) {
     const toast = document.getElementById('toast');
+    if (!toast) return;
     toast.textContent = message;
     toast.style.opacity = '1';
     toast.style.transform = 'translateX(-50%) scale(1)';
@@ -294,7 +295,7 @@ function processOrder() {
     const confirmed = confirm(`📱 Anda akan diarahkan ke WhatsApp untuk melanjutkan pesanan.\n\nPastikan nomor WhatsApp Anda aktif.\n\nLanjutkan?`);
     
     if (confirmed) {
-        // Simpan data ke localStorage sebelum redirect (opsional)
+        // Simpan data ke localStorage sebelum redirect
         saveCartToLocal();
         
         // Buka WhatsApp
@@ -302,13 +303,6 @@ function processOrder() {
         
         // Tampilkan notifikasi
         showToast("✅ Mengarahkan ke WhatsApp...", 2000);
-        
-        // Kosongkan keranjang setelah sukses (opsional, bisa juga tidak)
-        // setTimeout(() => {
-        //     cart = [];
-        //     renderCart();
-        //     saveCartToLocal();
-        // }, 3000);
     }
 }
 
@@ -335,39 +329,29 @@ function bindMenuButtons() {
     });
 }
 
-// Animasi loading screen
+// HILANGKAN LOADING SCREEN LANGSUNG
 function hideLoadingScreen() {
-    setTimeout(() => {
-        loadingScreen.classList.add('fade-out');
-        setTimeout(() => {
-            loadingScreen.style.display = 'none';
-            if (orderContainer) {
-                orderContainer.style.display = 'block';
-            }
-        }, 500);
-    }, 1500);
+    // Langsung sembunyikan loading screen tanpa delay
+    if (loadingScreen) {
+        loadingScreen.style.display = 'none';
+    }
+    if (orderContainer) {
+        orderContainer.style.display = 'block';
+    }
 }
 
 // Inisialisasi semua event + load data
 function init() {
-    // Tampilkan loading screen dulu
-    if (loadingScreen) {
-        loadingScreen.style.display = 'flex';
-    }
-    if (orderContainer) {
-        orderContainer.style.display = 'none';
-    }
+    console.log("Init function started"); // Untuk debugging
+    
+    // Sembunyikan loading screen langsung
+    hideLoadingScreen();
     
     // Load data dari localStorage
     loadCartFromLocal();
     
-    // Sembunyikan loading screen setelah delay
-    hideLoadingScreen();
-    
-    // Bind menu buttons setelah loading selesai
-    setTimeout(() => {
-        bindMenuButtons();
-    }, 1600);
+    // Bind menu buttons
+    bindMenuButtons();
     
     // Event untuk order dan reset
     if (orderBtn) {
@@ -378,7 +362,14 @@ function init() {
         resetBtn.removeEventListener('click', resetCart);
         resetBtn.addEventListener('click', resetCart);
     }
+    
+    console.log("Init function completed"); // Untuk debugging
 }
 
-// Panggil init saat halaman siap
-document.addEventListener('DOMContentLoaded', init);
+// Jalankan init ketika halaman siap
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    // DOM sudah siap, langsung jalankan
+    init();
+}
